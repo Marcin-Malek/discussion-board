@@ -47,14 +47,6 @@ function* signUpHandler() {
     const email = yield select(selectEmailInput);
     const password = yield select(selectPasswordInput);
 
-    if (!name) {
-        yield alert("Please enter your name");
-    } else if (!email) {
-        yield alert("Please enter your email");
-    } else if (!password) {
-        yield alert("You need to create a password");
-    }
-
     try {
         const userAuth = yield createUserWithEmailAndPassword(auth, email, password);
         try {

@@ -41,7 +41,14 @@ const Login = () => {
                         type="submit"
                         onClick={(e) => {
                             e.preventDefault();
-                            dispatch(signin());
+
+                            if (!email) {
+                                alert("Please enter your email");
+                            } else if (!password) {
+                                alert("You need to create a password");
+                            } else {
+                                dispatch(signin());
+                            }
                         }}
                     >
                         Log In
@@ -80,7 +87,16 @@ const Login = () => {
                         type='submit'
                         onClick={(e) => {
                             e.preventDefault();
-                            dispatch(signup());
+
+                            if (!name) {
+                                alert("Please enter your name");
+                            } else if (!email) {
+                                alert("Please enter your email");
+                            } else if (!password) {
+                                alert("You need to create a password");
+                            } else {
+                                dispatch(signup());
+                            }
                         }}
                     >
                         Sign Up
