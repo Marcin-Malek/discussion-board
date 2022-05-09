@@ -1,24 +1,20 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    setNameInput,
-    setEmailInput,
-    setPasswordInput,
+    setInputValues,
     signin,
     signup,
     toggleHasAccount,
-    selectNameInput,
-    selectEmailInput,
-    selectPasswordInput,
+    selectInputValues,
     selectHasAccount,
 } from '../authSlice';
 
 const Login = () => {
     const dispatch = useDispatch();
 
-    const name = useSelector(selectNameInput);
-    const email = useSelector(selectEmailInput);
-    const password = useSelector(selectPasswordInput);
+    const name = useSelector(selectInputValues).name;
+    const email = useSelector(selectInputValues).email;
+    const password = useSelector(selectInputValues).password;
     const hasAccount = useSelector(selectHasAccount);
 
     return (
@@ -27,13 +23,21 @@ const Login = () => {
                 <form>
                     <input
                         value={email}
-                        onChange={(e) => dispatch(setEmailInput(e.target.value))}
+                        onChange={(e) => dispatch(setInputValues({
+                            name,
+                            email: e.target.value,
+                            password
+                        }))}
                         placeholder='Email'
                         type='email'
                     />
                     <input
                         value={password}
-                        onChange={(e) => dispatch(setPasswordInput(e.target.value))}
+                        onChange={(e) => dispatch(setInputValues({
+                            name,
+                            email,
+                            password: e.target.value
+                        }))}
                         placeholder='Password'
                         type='password'
                     />
@@ -67,19 +71,31 @@ const Login = () => {
                 <form>
                     <input
                         value={name}
-                        onChange={(e) => dispatch(setNameInput(e.target.value))}
+                        onChange={(e) => dispatch(setInputValues({
+                            name: e.target.value,
+                            email,
+                            password
+                        }))}
                         placeholder='Full name (required for registering)'
                         type='text'
                     />
                     <input
                         value={email}
-                        onChange={(e) => dispatch(setEmailInput(e.target.value))}
+                        onChange={(e) => dispatch(setInputValues({
+                            name,
+                            email: e.target.value,
+                            password
+                        }))}
                         placeholder='Email'
                         type='email'
                     />
                     <input
                         value={password}
-                        onChange={(e) => dispatch(setPasswordInput(e.target.value))}
+                        onChange={(e) => dispatch(setInputValues({
+                            name,
+                            email,
+                            password: e.target.value
+                        }))}
                         placeholder='Password'
                         type='password'
                     />

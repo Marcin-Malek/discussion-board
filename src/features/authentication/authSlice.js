@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    nameInput: "",
-    emailInput: "",
-    passwordInput: "",
+    inputValues: {
+        name: "",
+        email: "",
+        password: "",
+    },
     user: "init",
     hasAccount: true,
 };
@@ -12,14 +14,8 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        setNameInput: (state, { payload }) => {
-            state.nameInput = payload;
-        },
-        setEmailInput: (state, { payload }) => {
-            state.emailInput = payload;
-        },
-        setPasswordInput: (state, { payload }) => {
-            state.passwordInput = payload;
+        setInputValues: (state, { payload }) => {
+            state.inputValues = payload;
         },
         setUser: (state, { payload }) => {
             state.user = payload;
@@ -33,18 +29,14 @@ export const authSlice = createSlice({
 });
 
 export const {
-    setNameInput,
-    setEmailInput,
-    setPasswordInput,
+    setInputValues,
     setUser,
     toggleHasAccount,
     signin,
     signup,
 } = authSlice.actions;
 
-export const selectNameInput = (state) => state.auth.nameInput;
-export const selectEmailInput = (state) => state.auth.emailInput;
-export const selectPasswordInput = (state) => state.auth.passwordInput;
+export const selectInputValues = (state) => state.auth.inputValues;
 export const selectUser = (state) => state.auth.user;
 export const selectHasAccount = (state) => state.auth.hasAccount
 

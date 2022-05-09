@@ -11,12 +11,8 @@ import {
     signInWithEmailAndPassword
 } from 'firebase/auth';
 import {
-    setNameInput,
-    setEmailInput,
-    setPasswordInput,
-    selectNameInput,
-    selectEmailInput,
-    selectPasswordInput,
+    setInputValues,
+    selectInputValues,
     setUser,
     signin,
     signup,
@@ -24,18 +20,19 @@ import {
 } from "./authSlice";
 
 function* signInHandler() {
-    const email = yield select(selectEmailInput);
-    const password = yield select(selectPasswordInput);
+    const inputValues = yield select(selectInputValues);
     try {
-        const userAuth = yield signInWithEmailAndPassword(auth, email, password)
+        const userAuth = yield signInWithEmailAndPassword(auth, inputValues.email, inputValues.password)
         yield put(setUser({
             email: userAuth.user.email,
             uid: userAuth.user.uid,
             displayName: userAuth.user.displayName,
         }));
-        yield put(setNameInput(""));
-        yield put(setEmailInput(""));
-        yield put(setPasswordInput(""));
+        yield put(setInputValues({
+            name: "",
+            email: "",
+            password: ""
+        }));
     } catch (error) {
         console.error(error);
         alert("Sorry, something went wrong, make sure your email and password is correct");
@@ -43,23 +40,23 @@ function* signInHandler() {
 }
 
 function* signUpHandler() {
-    const name = yield select(selectNameInput);
-    const email = yield select(selectEmailInput);
-    const password = yield select(selectPasswordInput);
+    const inputValues = yield select(selectInputValues);
 
     try {
-        const userAuth = yield createUserWithEmailAndPassword(auth, email, password);
+        const userAuth = yield createUserWithEmailAndPassword(auth, inputValues.email, inputValues.password);
         try {
-            yield call(updateProfile, userAuth.user, { displayName: name })
+            yield call(updateProfile, userAuth.user, { displayName: inputValues.name })
             yield put(setUser({
                 email: userAuth.user.email,
                 uid: userAuth.user.uid,
                 displayName: userAuth.user.displayName,
             }));
             yield put(toggleHasAccount());
-            yield put(setNameInput(""));
-            yield put(setEmailInput(""));
-            yield put(setPasswordInput(""));
+            yield put(setInputValues({
+                name: "",
+                email: "",
+                password: ""
+            }));
         } catch (error) {
             yield console.log("User not updated");
         }
