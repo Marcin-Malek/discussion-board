@@ -1,35 +1,46 @@
 import { takeLatest, select, takeEvery, put } from "redux-saga/effects";
-import { setCount, selectCount, } from "./counterSlice";
+import { setCount, selectCount } from "./counterSlice";
 import { getDoc, setDoc, doc } from "firebase/firestore";
 import { database } from "../../firebaseSetup";
-
-const countReference = doc(database, "count", "count");
+import { selectUser } from "../authentication/authSlice";
 
 function* counterInteractionHandler() {
+    const user = yield select(selectUser);
     const count = yield select(selectCount);
     try {
-        yield setDoc(countReference, { count });
-    } catch (err) {
-        console.log('Error in saga!:', err)
+        if (user) {
+            const countReference = yield doc(database, user.uid, "count");
+            yield setDoc(countReference, { count });
+
+        } else {
+            throw new Error("Couldn't identify user");
+        }
+    } catch (error) {
+        console.log('Error in saga!:', error)
     }
 }
 
 function* fetchCountHandler() {
+    const user = yield select(selectUser);
     try {
-        const docSnap = yield getDoc(countReference);
+        if (user) {
+            const countReference = yield doc(database, user.uid, "count");
+            const countSnapshot = yield getDoc(countReference);
 
-        if (docSnap.exists()) {
-            yield put(setCount(docSnap.data().count));
+            if (countSnapshot.exists()) {
+                yield put(setCount(countSnapshot.data().count));
+            } else {
+                yield put(setCount(0));
+            }
         } else {
-            yield put(setCount(0));
+            throw new Error("Couldn't identify user");
         }
-
-    } catch (err) {
-        console.log('Error in saga!:', err)
+    } catch (error) {
+        console.log('Error in saga!:', error)
     }
 }
 
 export function* counterSaga() {
     yield takeLatest(["counter/increment", "counter/decrement", "counter/incrementByAmount"], counterInteractionHandler);
-    yield takeEvery("counter/fetchCount", fetchCountHandler)
+    yield takeEvery("counter/fetchCount", fetchCountHandler);
 }
